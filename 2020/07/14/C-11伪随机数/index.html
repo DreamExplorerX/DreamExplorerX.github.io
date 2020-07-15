@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>C++11伪随机数 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/c++11%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-14 20:11">
+      2020年7月14日 晚上
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="C-11-伪随机数"><a href="#C-11-伪随机数" class="headerlink" title="C++11 伪随机数"></a>C++11 伪随机数</h1><h2 id="C风格伪随机数生成"><a href="#C风格伪随机数生成" class="headerlink" title="C风格伪随机数生成"></a>C风格伪随机数生成</h2><p>旧版本C/C++使用<code>rand()</code>函数生成区间在<code>[0, RAND_MAX]</code>的伪随机数，其存在多种问题：无法满足多种应用程序对不同区间范围、不同数值类型或不同分布的需求。而编程人员在编写程序为了解决这些问题通常会转换 rand 生成的随机数的范围、类型或者是分布时，常常会引入非随机性。</p>
+<h2 id="C-11新标准"><a href="#C-11新标准" class="headerlink" title="C++11新标准"></a>C++11新标准</h2><p>C++11新标准中提供了新的随机数生成库<code>&lt;random&gt;</code>来解决上述问题，<code>&lt;random&gt;</code>库主要通过<code>generator</code>和<code>distribution</code>的协作来生成随机数</p>
+<ul>
+<li><p>random_device类：可能产生真正的随机数，但依具体实现</p>
+</li>
+<li><p>random number engines(随机数生成引擎类): 负责生成原始随机数</p>
+</li>
+<li><p>random number distributions(随机数生成分布类): 使得生成的随机数满足统计学中的概率分布<br>STL预先指定了一系列的生成引擎，并且提供一个default_random_engine。default_random_engine会使用某个预定义的引擎，且不同编译器、不同平台的实现可能不同。</p>
+</li>
+</ul>
+<h3 id="非确定性随机数"><a href="#非确定性随机数" class="headerlink" title="非确定性随机数"></a>非确定性随机数</h3><p>C++11标准提供了<code>random_device</code>类，有可能产生真正的随机数，依赖于具体实现有关。windows平台好像依赖于伪随机生成实现。<code>std::random_device</code>是一个非常简单和可靠的随机生成器。该实现是由标准强制执行的，至少在Boost中，它在任何地方都使用相同的代码，这是从原始的<code>std::mt19937</code>文件派生而来的。这个代码非常稳定，是跨平台的。您可以非常确信，在任何编译它的平台上，初始化它、从它进行查询等都将编译成类似的代码，并且您将获得类似的性能。</p>
+<h3 id="随机数生成引擎"><a href="#随机数生成引擎" class="headerlink" title="随机数生成引擎"></a>随机数生成引擎</h3><p>C++11标准预先定义了多个算法的随机数生成引擎<br><img src="/img/c++11-predefined-random-number-engines.jpg" srcset="/img/loading.gif" alt=""></p>
+<p>随机数生成引擎定义为函数对象类，即实现了<code>operator()</code>运算符函数，<code>operator()</code>运算符函数无参数，返回随机生成的<code>unsigned</code>数，随机数区间位于<code>[default_randm_engine::min, default_randm_engine::max]</code>可通过调用随机数引擎对象生成原始随机数。</p>
+<pre><code class="hljs c++"><span class="hljs-built_in">std</span>::default_random_engine e;  <span class="hljs-comment">// 种子默认</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) &#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; e() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;  <span class="hljs-comment">// 通过调用e()获得下一个随机数</span>
+&#125;</code></pre>
+
+<h4 id="static-引擎和分布"><a href="#static-引擎和分布" class="headerlink" title="static 引擎和分布"></a>static 引擎和分布</h4><p>随机数生成引擎在同一初始状态下，会生成相同的随机数序列，这种特性适用于调试情况，若不希望这种情况，可将生成引擎和分布定义为<code>static</code>类型，保存其状态，这样多次调用就会不断使用前一个状态生成后续的序列。</p>
+<p>注意，一个给定的随机数发生器已知会生成相同的随机数序列。一个函数如果定义了局部的随机数发生器，应该将其（包括引擎和分布对象）定义为 static 的。否则，每次调用函数都会生成相同的序列。</p>
+<pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bad_generator</span><span class="hljs-params">()</span> </span>&#123;
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"bad engine: "</span>;
+	default_random_engine bad_engine;
+	<span class="hljs-function">uniform_int_distribution&lt;&gt; <span class="hljs-title">bad_distribution</span> <span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>)</span></span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+		<span class="hljs-built_in">cout</span> &lt;&lt; bad_distribution(bad_engine) &lt;&lt; <span class="hljs-string">" "</span>;
+	&#125;
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">good_generator</span><span class="hljs-params">()</span> </span>&#123;
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"good engine: "</span>;
+	<span class="hljs-keyword">static</span> default_random_engine good_engine;
+	<span class="hljs-function"><span class="hljs-keyword">static</span> uniform_int_distribution&lt;&gt; <span class="hljs-title">good_distribution</span> <span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>)</span></span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+		<span class="hljs-built_in">cout</span> &lt;&lt; good_distribution(good_engine) &lt;&lt; <span class="hljs-string">" "</span>;
+	&#125;
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+	bad_generator();  <span class="hljs-comment">// 输出 bad engine: 1 2 8 5 6 3 1 7 7 10</span>
+	bad_generator();  <span class="hljs-comment">// 输出 bad engine: 1 2 8 5 6 3 1 7 7 10</span>
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"------------------"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+	good_generator();  <span class="hljs-comment">// 输出 good engine: 1 2 8 5 6 3 1 7 7 10</span>
+	good_generator();  <span class="hljs-comment">// 输出 good engine: 4 6 9 1 1 6 7 1 4 1</span>
+
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+
+
+
+
+<h4 id="设置随机数种子"><a href="#设置随机数种子" class="headerlink" title="设置随机数种子"></a>设置随机数种子</h4><p>随机数生成引擎在同一初始状态下，会生成相同的随机数序列。可以通过设置种子使得其随机数序列不同。存在两种方法修改随机数种子</p>
+<ul>
+<li>定义随机数引擎类的构造函数</li>
+<li>调用<code>seed</code>函数</li>
+</ul>
+<pre><code class="hljs c++">default_random_engine e1;		<span class="hljs-comment">//默认的种子</span>
+<span class="hljs-function">default_random_engine <span class="hljs-title">e2</span><span class="hljs-params">(<span class="hljs-number">100</span>)</span></span>;	        <span class="hljs-comment">// 构造函数中设定种子</span>
+ 
+default_random_engine e3;  <span class="hljs-comment">// 默认种子</span>
+e3.seed(<span class="hljs-number">100</span>);  <span class="hljs-comment">// 设置种子</span></code></pre>
+
+<p>关于种子，旧版本可能使用<code>time(NULL)</code>函数来设定种子，但<code>time</code>函数精度为秒，重复调用可能会生成相同的种子。这里可利用上文提到的<code>random_device</code>类的特性设置种子</p>
+<pre><code class="hljs c++"><span class="hljs-built_in">std</span>::random_device rd;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::default_random_engine <span class="hljs-title">e</span><span class="hljs-params">(rd())</span></span>;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::uniform_int_distribution&lt;&gt; <span class="hljs-title">u</span><span class="hljs-params">(<span class="hljs-number">5</span>,<span class="hljs-number">20</span>)</span></span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;
+    <span class="hljs-built_in">cout</span> &lt;&lt; u(e) &lt;&lt; <span class="hljs-built_in">endl</span>;
+&#125;</code></pre>
+
+<h3 id="随机分布"><a href="#随机分布" class="headerlink" title="随机分布"></a>随机分布</h3><p>类似引擎类型，分布类型也是函数对象类，实现了<code>operator()</code>函数分布类型处理随机数生成引擎生成的随机数，使其结果满足某种概率分布。</p>
+<h4 id="均匀概率分布-默认类型"><a href="#均匀概率分布-默认类型" class="headerlink" title="均匀概率分布(默认类型)"></a>均匀概率分布(默认类型)</h4><pre><code class="hljs c++"><span class="hljs-built_in">std</span>::default_random_engine e;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::uniform_int_distribution&lt;&gt; <span class="hljs-title">u</span><span class="hljs-params">(<span class="hljs-number">5</span>, <span class="hljs-number">20</span>)</span></span>;  <span class="hljs-comment">// 默认类型为unsigned，指定随机数范围区间[5, 10]</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) &#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; u(e) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;  <span class="hljs-comment">// 传递引擎对象给分布对象，因为某些分布可能需要调用引擎多次才能产生一个值。</span>
+&#125;</code></pre>
+
+<h4 id="均匀概率分布-实数类型"><a href="#均匀概率分布-实数类型" class="headerlink" title="均匀概率分布(实数类型)"></a>均匀概率分布(实数类型)</h4><pre><code class="hljs c++"><span class="hljs-built_in">std</span>::default_random_engine e;
+<span class="hljs-function"><span class="hljs-built_in">std</span>::uniform_real_distribution&lt;&gt; <span class="hljs-title">u</span><span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)</span></span>;  <span class="hljs-comment">// 默认类型为double，指定随机数范围区间[0, 1]</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) &#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; u(e) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;  <span class="hljs-comment">// 传递引擎对象给分布对象，因为某些分布可能需要调用引擎多次才能产生一个值。</span>
+&#125;</code></pre>
+
+<h4 id="其他非均匀分布"><a href="#其他非均匀分布" class="headerlink" title="其他非均匀分布"></a>其他非均匀分布</h4><p>比如伯努利分布、正态分布、抽样分布、泊松分布等。</p>
+<p><img src="/img/c++11-predefined-random-number-distributions.jpg" srcset="/img/loading.gif" alt=""></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p><a href="https://en.cppreference.com/w/cpp/numeric/random" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/numeric/random</a></p>
+</li>
+<li><p><a href="http://www.cplusplus.com/reference/random/" target="_blank" rel="noopener">http://www.cplusplus.com/reference/random/</a></p>
+</li>
+<li><p><a href="https://stackoverflow.com/questions/39288595/why-not-just-use-random-device" target="_blank" rel="noopener">Why not just use random_device?</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/qq_34784753/article/details/79600809" target="_blank" rel="noopener">【C++】c++ 11中的随机数 ——random</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/songshiMVP1/article/details/47016805" target="_blank" rel="noopener">C++11随机数发生器 VS rand()</a></p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/C-11/">C++11</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C-11/">C++11</a>
+                    
+                      <a class="hover-with-bg" href="/tags/random/">random</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/14/hello-world/">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "C++11伪随机数&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
